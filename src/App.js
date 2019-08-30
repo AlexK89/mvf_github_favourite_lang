@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { baseURL, getRequest } from './helpers/API'
+import Aux from './hoc/Aux'
+import styles from './App.module.scss';
 
-function App() {
+import SearchForm from './components/SearchForm/SearchForm'
+import UserCard from './components/UserCard/UserCard'
+import UserRepos from './containers/UserRepos'
+
+const App = () => {
+  const [gitUserData, setgitUserData] = useState(null)
+
+  const fetchUserData = async userName => {
+    const userData = await getRequest(`${baseURL}/${userName}`)
+    setgitUserData(userData)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.page_container}>
+      <SearchForm fetchUserData={fetchUserData} />
+      {
+        gitUserData &&
+          <Aux>
+            <UserCard />
+            <UserRepos />
+          </Aux>
+      }
     </div>
   );
 }
