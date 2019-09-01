@@ -18,12 +18,11 @@ const App = () => {
 
   const fetchUserData = async userName => {
     const userData = await getRequest(`${baseURL}/${userName}`)
-
-    if (!userData) return false
+    if (!userData || !userData.login) return false
 
     const reposPageLimit = getLimitForArray(userData.public_repos)
-    console.log(reposPageLimit)
     const userRepos = await fetchUserRepos({ url: userData.repos_url, reposPageLimit})
+
     const favouriteLanguages = mostRepeatableValueInObject({
       objectsArray: userRepos, 
       objectKey: 'language'
