@@ -1,0 +1,58 @@
+@import "../../../../styles/variables";
+
+@keyframes animation {
+  0% {
+    transform: translate(0, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.repo_card_wrapper {
+  width: 100%;
+  animation: animation 0.3s ease-in forwards;
+  padding: 0 0 0 4px;
+
+  .repo_card {
+    background-color: #fff;
+    padding: 2em;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-auto-rows: auto;
+    justify-content: space-between;
+    color: $darkGrey;
+
+    h5 {
+      margin: 0;
+    }
+
+    &__ssh {
+      grid-column: span 2;
+    }
+
+    &__more {
+      grid-column: span 2;
+      grid-row: span auto;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        padding: 0;
+        background-color: $blue;
+
+        &:hover {
+          background-color: $lightBlue;
+        }
+        a {
+          display: inline-block;
+          padding: 0.5em 1em;
+          text-decoration: none;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

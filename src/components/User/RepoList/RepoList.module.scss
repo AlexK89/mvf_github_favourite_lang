@@ -1,0 +1,18 @@
+@import "../../../styles/variables";
+
+.repo_list {
+  width: 90%;
+  max-width: 600px;
+
+  .more_repos {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2em;
+    
+    button {
+      &:hover {
+        background-color: $violet;
+      }
+    }
+  }
+}
