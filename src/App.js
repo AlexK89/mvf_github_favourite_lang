@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { baseURL, getRequest } from './helpers/API'
-import { 
-  mostRepeatableValueInObject, 
-  fetchUserRepos, 
-  getLimitForArray } from './helpers/helperFunctions'
+import { baseURL, getRequest, fetchLanguages } from './helpers/API'
+import { mostRepeatableValueInObject, fetchUserRepos } from './helpers/helperFunctions'
 import Aux from './HOC/Aux'
 
 import './styles/_symbols.scss';
@@ -17,16 +14,16 @@ const App = () => {
   const [gitUserData, setgitUserData] = useState(null)
 
   const fetchUserData = async userName => {
+    const graphObject = await fetchLanguages(userName)
+    if (!graphObject || !graphObject.data) return false
+
+    const languagesArrayOfObjects = graphObject.data.user.repositories.nodes
+    const favouriteLanguages = mostRepeatableValueInObject(languagesArrayOfObjects)
+
     const userData = await getRequest(`${baseURL}/${userName}`)
     if (!userData || !userData.login) return false
 
-    const reposPageLimit = getLimitForArray(userData.public_repos)
-    const userRepos = await fetchUserRepos({ url: userData.repos_url, reposPageLimit})
-
-    const favouriteLanguages = mostRepeatableValueInObject({
-      objectsArray: userRepos, 
-      objectKey: 'language'
-    })
+    const userRepos = await fetchUserRepos({ url: userData.repos_url})
 
     if (userRepos && favouriteLanguages) {
       setgitUserData({
