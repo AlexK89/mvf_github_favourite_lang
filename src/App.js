@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { baseURL, getRequest } from './helpers/API'
-import { mostRepeatableValueInObject } from './helpers/helperFunctions'
+import { 
+  mostRepeatableValueInObject, 
+  fetchUserRepos, 
+  getLimitForArray } from './helpers/helperFunctions'
 import Aux from './HOC/Aux'
 
 import './styles/_symbols.scss';
@@ -12,13 +15,19 @@ import RepoList from './components/User/RepoList/RepoList'
 
 const App = () => {
   const [gitUserData, setgitUserData] = useState(null)
-  const reposPageLimit = 20;
 
   const fetchUserData = async userName => {
     const userData = await getRequest(`${baseURL}/${userName}`)
+
     if (!userData) return false
-    const userRepos = await fetchUserRepos(userData.repos_url)
-    const favouriteLanguages = mostRepeatableValueInObject(userRepos, 'language', reposPageLimit)
+
+    const reposPageLimit = getLimitForArray(userData.public_repos)
+    console.log(reposPageLimit)
+    const userRepos = await fetchUserRepos({ url: userData.repos_url, reposPageLimit})
+    const favouriteLanguages = mostRepeatableValueInObject({
+      objectsArray: userRepos, 
+      objectKey: 'language'
+    })
 
     if (userRepos && favouriteLanguages) {
       setgitUserData({
@@ -27,14 +36,6 @@ const App = () => {
         favouriteLanguages
       })
     }
-  }
-
-  const fetchUserRepos = async (url, page = 1) => {
-    const userRepos = await getRequest(`
-      ${url}?page=${page}&per_page=${reposPageLimit}
-    `)
-
-    return userRepos
   }
 
   return (

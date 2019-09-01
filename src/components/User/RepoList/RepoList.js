@@ -11,7 +11,7 @@ const RepoList = ({ url, fetchUserRepos }) => {
 
     useEffect(() => {
         const onLoadHandler = async () => {
-            const fetchedRepos = await fetchUserRepos(url)
+            const fetchedRepos = await fetchUserRepos({ url })
             setrepoListState({
                 repos: fetchedRepos,
                 page: 2
@@ -21,16 +21,16 @@ const RepoList = ({ url, fetchUserRepos }) => {
     }, [url])
 
     const showMoreHandler = async () => {
-        const fetchedRepos = await fetchUserRepos(url, repoListState.page)
+        const fetchedRepos = await fetchUserRepos({url, page: repoListState.page})
         if (!fetchedRepos) return false
         const newList = [...repoListState.repos, ...fetchedRepos]
-        
+
         if (fetchedRepos.length) {
             setrepoListState({
                 repos: newList,
                 page: repoListState.page + 1
             })
-        }   
+        }
     }
 
     const reposToRender = repoListState.repos ? repoListState.repos : []
